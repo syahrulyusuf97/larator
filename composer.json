@@ -1,6 +1,7 @@
 {
     "name": "syahrulyusuf97/larator",
-    "version": "1.0.0",
+    "type": "laravel",
+    "license": "MIT",
     "description": "This package will do some generator for laravel",
     "authors": [
         {
@@ -9,25 +10,10 @@
         }
     ],
     "minimum-stability": "dev",
-    "extra": {
-        "laravel": {
-            "providers": [
-                "syahrulyusuf97\\larator\\Providers\\LaratorServiceProvider"
-            ]
-        }
-    },
     "autoload": {
         "psr-4": {
-            "syahrulyusuf97\\larator\\": "src/"
+            "Syahrulyusuf97\\Larator\\": "src/"
         }
     },
-    "require": {},
-    "require-dev": {},
-    "repositories": [
-    {
-    "type": "composer",
-    "url": "https://packagist.org"
-    },
-    { "packagist": false }
-    ]
+    "require": {}
 }
