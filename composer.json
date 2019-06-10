@@ -8,7 +8,7 @@
             "email": "syahrulyusuf97@gmail.com"
         }
     ],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "require": {},
     "require-dev": {},
     "repositories": [
