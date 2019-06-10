@@ -6,6 +6,11 @@ use Illuminate\Support\ServiceProvider;
 
 class LaratorServiceProvider extends ServiceProvider
 {
+    protected $commands = [
+        'Syahrulyusuf97\Larator\Commands\GenerateDashboard',
+        'Syahrulyusuf97\Larator\Commands\MakeUserAdmin',
+        'Syahrulyusuf97\Larator\Commands\MakeUserDev',
+    ];
     /**
      * Register services.
      *
@@ -15,6 +20,7 @@ class LaratorServiceProvider extends ServiceProvider
     {
         // register our controller
         // $this->app->make('Devdojo\Calculator\CalculatorController');
+        $this->commands($this->commands);
     }
 
     /**
