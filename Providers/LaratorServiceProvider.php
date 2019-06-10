@@ -45,5 +45,8 @@ class LaratorServiceProvider extends ServiceProvider
         // $this->publishes([
         //     __DIR__.'/views' => base_path('resources/views/wisdmlabs/todolist'),
         // ]);
+        $this->publishes([
+            __DIR__.'/Helpers/*' => base_path('app/Helpers'),
+        ]);
     }
 }
