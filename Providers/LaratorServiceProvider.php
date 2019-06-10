@@ -36,7 +36,7 @@ class LaratorServiceProvider extends ServiceProvider
         //load views
         //$this->loadViewsFrom(__DIR__.'/resources/views', 'contactform');
         //load migrations
-        // /$this->loadMigrationsFrom(__DIR__.'/Database/migrations');
+        $this->loadMigrationsFrom(__DIR__.'/Database/migrations');
         //to publish
         //vendor:publish
         // $this->publishes([
