@@ -18,7 +18,7 @@
     },
     "autoload": {
         "psr-4": {
-            "syahrulyusuf97\\Larator\\": "src/"
+            "syahrulyusuf97\\larator\\": "src/"
         }
     },
     "require": {},
