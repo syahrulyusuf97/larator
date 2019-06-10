@@ -1,5 +1,6 @@
 {
     "name": "syahrulyusuf97/larator",
+    "version": "1.0.0",
     "description": "This package will do some generator for laravel",
     "authors": [
         {
