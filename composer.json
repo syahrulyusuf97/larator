@@ -1,0 +1,12 @@
+{
+    "name": "syahrulyusuf97/larator",
+    "description": "This package will do some generator for laravel",
+    "authors": [
+        {
+            "name": "Syahrul Yusuf",
+            "email": "syahrulyusuf97@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
