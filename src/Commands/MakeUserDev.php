@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Syahrulyusuf97\Larator\Commands;
 
 use Illuminate\Console\Command;
 use App\Console\Controllers\CreateUser;

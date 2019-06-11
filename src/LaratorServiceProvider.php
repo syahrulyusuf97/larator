@@ -19,7 +19,9 @@ class LaratorServiceProvider extends ServiceProvider
     public function register()
     {
         // register our controller
-        // $this->app->make('Devdojo\Calculator\CalculatorController');
+        $this->app->make('Syahrulyusuf97\Larator\Http\Controllers\CreateDashboard');
+        $this->app->make('Syahrulyusuf97\Larator\Http\Controllers\CreateUser');
+        //register commands
         $this->commands($this->commands);
     }
 
