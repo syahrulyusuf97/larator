@@ -4,7 +4,7 @@
 /storage/*.key
 /vendor
 .env
-.fuse_hidden000000e80000000d
+.fuse_hidden*
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
