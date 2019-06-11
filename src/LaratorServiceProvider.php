@@ -45,7 +45,7 @@ class LaratorServiceProvider extends ServiceProvider
         //publishing helpers
         //publishing assets
         $this->publishes([
-            __DIR__.'/Helpers/*'    => base_path('app/Helpers'),
+            __DIR__.'/Helpers'    => base_path('app/Helpers'),
             __DIR__.'/Assets'       => public_path(),
         ]);
     }
