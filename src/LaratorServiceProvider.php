@@ -1,6 +1,6 @@
 <?php
 
-namespace Syahrulyusuf97\Larator\Providers;
+namespace Syahrulyusuf97\Larator;
 
 use Illuminate\Support\ServiceProvider;
 
