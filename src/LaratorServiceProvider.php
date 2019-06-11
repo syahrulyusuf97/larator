@@ -6,11 +6,11 @@ use Illuminate\Support\ServiceProvider;
 
 class LaratorServiceProvider extends ServiceProvider
 {
-    // protected $commands = [
-    //     'Syahrulyusuf97\Larator\commands\GenerateDashboard',
-    //     'Syahrulyusuf97\Larator\commands\MakeUserAdmin',
-    //     'Syahrulyusuf97\Larator\commands\MakeUserDev',
-    // ];
+    protected $commands = [
+        'Syahrulyusuf97\Larator\Commands\GenerateDashboard',
+        'Syahrulyusuf97\Larator\Commands\MakeUserAdmin',
+        'Syahrulyusuf97\Larator\Commands\MakeUserDev',
+    ];
     /**
      * Register services.
      *
@@ -20,8 +20,7 @@ class LaratorServiceProvider extends ServiceProvider
     {
         // register our controller
         // $this->app->make('Devdojo\Calculator\CalculatorController');
-        // $this->app->register('syahrulyusuf97\larator\provider\LaratorServiceProvider');
-        // $this->commands($this->commands);
+        $this->commands($this->commands);
     }
 
     /**
@@ -48,6 +47,9 @@ class LaratorServiceProvider extends ServiceProvider
         // ]);
         // $this->publishes([
         //     __DIR__.'/Helpers/*' => base_path('app/Helpers'),
+        // ]);
+        // $this->commands([
+        //     \Vendor\Package\Commands\FooCommand ::class,
         // ]);
     }
 }
