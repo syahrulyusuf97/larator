@@ -12,7 +12,7 @@
     "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
-            "syahrulyusuf97\\larator\\": "src/"
+            "Syahrulyusuf97\\Larator\\": "src/"
         }
     },
     "require": {}
