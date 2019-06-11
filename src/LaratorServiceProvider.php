@@ -32,11 +32,6 @@ class LaratorServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
-        //include __DIR__.'/routes/routes.php'; atau
-        //$this->loadRoutesFrom(__DIR__.'/routes/web.php');
-        //load views
-        //$this->loadViewsFrom(__DIR__.'/resources/views', 'contactform');
         //load migrations
         $this->loadMigrationsFrom(__DIR__.'/Database/migrations');
         //to publish
@@ -47,11 +42,11 @@ class LaratorServiceProvider extends ServiceProvider
         // $this->publishes([
         //     __DIR__.'/views' => base_path('resources/views/wisdmlabs/todolist'),
         // ]);
-        // $this->publishes([
-        //     __DIR__.'/Helpers/*' => base_path('app/Helpers'),
-        // ]);
-        // $this->commands([
-        //     \Vendor\Package\Commands\FooCommand ::class,
-        // ]);
+        //publishing helpers
+        //publishing assets
+        $this->publishes([
+            __DIR__.'/Helpers/*'    => base_path('app/Helpers'),
+            __DIR__.'/Assets'       => base_path('public'),
+        ]);
     }
 }
