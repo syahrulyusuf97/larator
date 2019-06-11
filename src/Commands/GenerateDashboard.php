@@ -3,7 +3,7 @@
 namespace Syahrulyusuf97\Larator\Commands;
 
 use Illuminate\Console\Command;
-use App\Console\Controllers\CreateDashboard;
+use Syahrulyusuf97\Larator\Http\Controllers\CreateDashboard;
 
 class GenerateDashboard extends Command
 {

@@ -3,7 +3,7 @@
 namespace Syahrulyusuf97\Larator\Commands;
 
 use Illuminate\Console\Command;
-use App\Console\Controllers\CreateUser;
+use Syahrulyusuf97\Larator\Http\Controllers\CreateUser;
 
 class MakeUserAdmin extends Command
 {
