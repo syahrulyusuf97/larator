@@ -181,7 +181,8 @@ class CreateDashboard extends Controller
 				"		} \n".
 				"		if ($"."request->isMethod('post')) { \n".
 				"			$"."data = $"."request->input(); \n".
-				"			if (Auth::attempt(['username'=>$"."data['username'], 'password'=>$"."data['password']])) { \n".
+				"			$"."remember_me = $"."request->has('remember') ? true : false;\n".
+				"			if (Auth::attempt(['username'=>$"."data['username'], 'password'=>$"."data['password']], $"."remember_me)) { \n".
 				"				$"."level = DB::table('level')->where('id', '=', Auth::user()->idlevel)->first()->name; \n".
 				"				Session::put('adminSession', Auth::user()->email); \n".
 				"				Session::put('adminName', Auth::user()->name); \n".
@@ -189,6 +190,8 @@ class CreateDashboard extends Controller
 				"				User::where('id', Auth::user()->id)->update([ \n".
 				"					'lastlogin' => Carbon::now() \n".
 				"				]); \n".
+				"				$"."user = auth()->user();\n".
+				"				Auth::login($"."user,true);\n".
 				"				Activity::log(Auth::user()->id, 'IP Address: '. $"."request->ip() . ' Device: '. $"."request->header('User-Agent') . 'Activity: Login', Carbon::now()); \n".
 				"				return redirect('/dashboard'); \n".
 				"			} else { \n".
@@ -297,7 +300,7 @@ class CreateDashboard extends Controller
 									'					<div class="row">'."\n".
 									'						<div class="col-xs-8">'."\n".
 									'							<div class="checkbox icheck">'."\n".
-									'								<label></label>'."\n".
+									'								<label class="text-white ml-20"><input type="checkbox" name="remember" id="remember" value="1"> Remember Me!</label>'."\n".
 									'							</div>'."\n".
 									'						</div>'."\n".
 									'						<div class="col-xs-4">'."\n".
