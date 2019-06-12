@@ -29,6 +29,7 @@ class CreateUsersTable extends Migration
             $table->string('image')->nullable();
             $table->dateTime('lastlogin')->nullable();
             $table->dateTime('lastlogout')->nullable();
+            $table->rememberToken();
             $table->timestamps();
             $table->foreign('idlevel')->references('id')->on('level')->onDelete('cascade');
         });

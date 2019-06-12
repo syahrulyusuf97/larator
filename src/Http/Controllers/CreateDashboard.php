@@ -45,6 +45,7 @@ class CreateDashboard extends Controller
 		$dir_sign_controller  		= $dir_controllers . "/Sign";
 		$file_sign_controller 		= $dir_sign_controller . '/SignController.php';
 		$file_activity_controller 	= $dir_sign_controller . '/ActivityController.php';
+		$user_model					= "app/User.php";
 		$activity_model				= "app/Activity.php";
 
 		$dir_layouts				= $dir_views . "/layouts";
@@ -54,6 +55,54 @@ class CreateDashboard extends Controller
 		$file_sign_view				= $dir_sign_view . "/login.blade.php";
 
 		try{
+			if (!file_exists($user_model)) {
+				$content_user_model = "<?php \n".
+				"namespace App;\n".
+				"use Illuminate\Notifications\Notifiable;\n".
+				"use Illuminate\Contracts\Auth\MustVerifyEmail;\n".
+				"use Illuminate\Foundation\Auth\User as Authenticatable;\n".
+				"class User extends Authenticatable\n".
+				"{\n".
+				"	use Notifiable;\n".
+				"	protected $"."table       = 'user';\n".
+				"	protected $fillable = [\n".
+			    "    	'name', 'email', 'username', 'password',\n".
+			    "	];\n".
+			    "	protected $hidden = [\n".
+			    "	    'password',\n".
+			    "	];\n".
+				"}";
+
+				$file = fopen($user_model,"w");
+
+				fwrite($file, $content_user_model);
+
+				fclose($file);
+			} else {
+				try{
+		    		$handle = fopen($user_model, 'a') or die('Cannot open file:  '.$user_model);
+					$new_user_model = "<?php \n".
+										"namespace App;\n".
+										"use Illuminate\Notifications\Notifiable;\n".
+										"use Illuminate\Contracts\Auth\MustVerifyEmail;\n".
+										"use Illuminate\Foundation\Auth\User as Authenticatable;\n".
+										"class User extends Authenticatable\n".
+										"{\n".
+										"	use Notifiable;\n".
+										"	protected $"."table       = 'user';\n".
+										"	protected $fillable = [\n".
+									    "    	'name', 'email', 'username', 'password',\n".
+									    "	];\n".
+									    "	protected $hidden = [\n".
+									    "	    'password',\n".
+									    "	];\n".
+										"}";
+					fwrite($handle, $new_user_model);
+					return true;
+		    	}catch (Exception $e){
+		    		return $e;
+		    	}
+			}
 
 			if (!file_exists($activity_model)) {
 				$content_activity_model = "<?php \n".
@@ -178,26 +227,27 @@ class CreateDashboard extends Controller
 			}
 
 			if (!file_exists($file_sign_layout)) {
-				$content_sign_layout = "<!DOCTYPE html>\n".
-				'<html lang="'.'{{ str_replace("_", "-", app()->getLocale()) }}"'.'>'."\n".
-				"<head>\n".
-				'	<meta charset="utf-8">'."\n".
-				'	<meta http-equiv="X-UA-Compatible" content="IE=edge">'."\n".
-				'	<meta name="viewport" content="width=device-width, initial-scale=1">'."\n".
-				'	<link rel="icon" type="image/png" href="{{ asset("public/images/icon/book.png") }}" />'."\n".
-				'	<title>MasterAPPS | @yield("title")</title>'."\n".
-				'	<meta name="csrf-token" content="{{ csrf_token() }}">'."\n".
-				'	<link rel="stylesheet" href="{{ asset("public/css/bootstrap/bootstrap.min.css") }}">'."\n".
-				'	<link rel="stylesheet" href="{{ asset("public/css/font-awesome/css/font-awesome.min.css") }}">'."\n".
-				'	<link rel="stylesheet" href="{{ asset("public/css/Ionicons/css/ionicons.min.css") }}">'."\n".
-				'	<link rel="stylesheet" href="{{ asset("public/css/adminLTE/AdminLTE.min.css") }}">'."\n".
-				'	<link rel="stylesheet" href="{{ asset("public/css/iCheck/square/blue.css") }}">'."\n".
-				'	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">'."\n".
-				"</head>\n".
-				'<body class="hold-transition login-page">'."\n".
-				'	@yield("content")'."\n".
-				"</body>\n".
-				"</html>";
+				$content_sign_layout = '<!DOCTYPE html>'."\n".
+										'<html lang="{{ str_replace("_", "-", app()->getLocale()) }}">'."\n".
+										'<head>'."\n".
+										'	<meta charset="utf-8">'."\n".
+										'	<meta http-equiv="X-UA-Compatible" content="IE=edge">'."\n".
+										'	<meta name="viewport" content="width=device-width, initial-scale=1">'."\n".
+										'	<link rel="icon" type="image/png" href="{{ asset("public/images/icon/book.png") }}" />'."\n".
+										'	<title>LaraTOR | @yield("title")</title>'."\n".
+										'	<meta name="csrf-token" content="{{ csrf_token() }}">'."\n".
+										'	<link rel="stylesheet" href="{{ asset("public/css/bootstrap/bootstrap.min.css") }}">'."\n".
+										'	<link rel="stylesheet" href="{{ asset("public/css/font-awesome/css/font-awesome.min.css") }}">'."\n".
+										'	<link rel="stylesheet" href="{{ asset("public/css/Ionicons/css/ionicons.min.css") }}">'."\n".
+										'	<link rel="stylesheet" href="{{ asset("public/css/adminLTE/AdminLTE.min.css") }}">'."\n".
+										'	<link rel="stylesheet" href="{{ asset("public/css/iCheck/square/blue.css") }}">'."\n".
+										'	<link rel="stylesheet" href="{{ asset("public/css/masterapps.css") }}">'."\n".
+										'	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">'."\n".
+										'</head>'."\n".
+										'<body class="hold-transition login-page bg-image-login">'."\n".
+										'	@yield("content")'."\n".
+										'</body>'."\n".
+										'</html>';
 
 				$file = fopen($file_sign_layout,"w");
 
@@ -213,52 +263,55 @@ class CreateDashboard extends Controller
 
 			if (!file_exists($file_sign_view)) {
 				$content_sign_view = "@extends('layouts.sign.login')\n".
-				"@section('title', 'Login')\n".
-				"@section('content')\n".
-				'<div class="login-box">'."\n".
-				'	<div class="login-logo">'."\n".
-				'		<a href="#">Master<b>APPS</b></a>'."\n".
-				"	</div>\n".
-				'	<div class="login-box-body">'."\n".
-				'		<p class="login-box-msg">Sign in to start your session</p>'."\n".
-				'		@if(Session::has("flash_message_error"))'."\n".
-				'			<div class="alert alert-error alert-block">'."\n".
-				'				<button type="button" class="close" data-dismiss="alert">&times;</button>'."\n".
-				'				<strong>{!! session("flash_message_error") !!}</strong>'."\n".
-				'			</div>'."\n".
-				'		@endif'."\n".
-				'		@if(Session::has("flash_message_success"))'."\n".
-				'			<div class="alert alert-success alert-block">'."\n".
-				'				<button type="button" class="close" data-dismiss="alert">&times;</button>'."\n".
-				'				<strong>{!! session("flash_message_success") !!}</strong>'."\n".
-				'			</div>'."\n".
-				'		@endif'."\n".
-				'		<form action="{{ url("/login") }}" method="post">{{ csrf_field() }}'."\n".
-				'			<div class="form-group has-feedback">'."\n".
-				'				<input type="text" name="username" id="username" class="form-control" autofocus placeholder="Username">'."\n".
-				'				<span class="glyphicon glyphicon-user form-control-feedback"></span>'."\n".
-				'			</div>'."\n".
-				'			<div class="form-group has-feedback">'."\n".
-				'				<input type="password" name="password" id="password" class="form-control" placeholder="Password">'."\n".
-				'				<span class="glyphicon glyphicon-lock form-control-feedback"></span>'."\n".
-				'			</div>'."\n".
-				'			<div class="row">'."\n".
-				'				<div class="col-xs-8">'."\n".
-				'					<div class="checkbox icheck">'."\n".
-				'						<label></label>'."\n".
-				'					</div>'."\n".
-				'				</div>'."\n".
-				'				<div class="col-xs-4">'."\n".
-				'					<button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>'."\n".
-				'				</div>'."\n".
-				'			</div>'."\n".
-				'		</form>'."\n".
-				"	</div>\n".
-				"</div>\n".
-				"\n".
-				'<script src="{{ asset("public/js/jQuery/jquery.min.js") }}"></script>'."\n".
-				'<script src="{{ asset("public/js/bootstrap/bootstrap.min.js") }}"></script>'."\n".
-				"@endsection";
+									"@section('title', 'Signin')\n".
+									"@section('content')\n".
+									'<div class="row">'."\n".
+									'    <div class="col-xs-12 col-lg-12 col-md-12 col-sm-12">'."\n".
+									'		<div class="login-box">'."\n".
+									'			<div class="login-logo">'."\n".
+									'				<a href="#">Lara<b>TOR</b></a>'."\n".
+									'			</div>'."\n".
+									'			<div class="login-box-body black-transparent">'."\n".
+									'				<p class="login-box-msg text-white">Sign in to start your session</p>'."\n".
+									'				@if(Session::has("flash_message_error"))'."\n".
+									'					<div class="alert alert-error alert-block">'."\n".
+									'						<button type="button" class="close" data-dismiss="alert">&times;</button>'."\n".
+									'						<strong>{!! session("flash_message_error") !!}</strong>'."\n".
+									'					</div>'."\n".
+									'				@endif'."\n".
+									'				@if(Session::has("flash_message_success"))'."\n".
+									'					<div class="alert alert-success alert-block">'."\n".
+									'						<button type="button" class="close" data-dismiss="alert">&times;</button>'."\n".
+									'						<strong>{!! session("flash_message_success") !!}</strong>'."\n".
+									'					</div>'."\n".
+									'				@endif'."\n".
+									'				<form action="{{ url("/login") }}" method="post">{{ csrf_field() }}'."\n".
+									'					<div class="form-group has-feedback">'."\n".
+									'						<input type="text" name="username" id="username" class="form-control" autofocus placeholder="Username">'."\n".
+									'						<span class="glyphicon glyphicon-user form-control-feedback"></span>'."\n".
+									'					</div>'."\n".
+									'					<div class="form-group has-feedback">'."\n".
+									'						<input type="password" name="password" id="password" class="form-control" placeholder="Password">'."\n".
+									'						<span class="glyphicon glyphicon-lock form-control-feedback"></span>'."\n".
+									'					</div>'."\n".
+									'					<div class="row">'."\n".
+									'						<div class="col-xs-8">'."\n".
+									'							<div class="checkbox icheck">'."\n".
+									'								<label></label>'."\n".
+									'							</div>'."\n".
+									'						</div>'."\n".
+									'						<div class="col-xs-4">'."\n".
+									'							<button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>'."\n".
+									'						</div>'."\n".
+									'					</div>'."\n".
+									'				</form>'."\n".
+									'			</div>'."\n".
+									'		</div>'."\n".
+									'    </div>'."\n".
+									'</div>'."\n".
+									'<script src="{{ asset("public/js/jQuery/jquery.min.js") }}"></script>'."\n".
+									'<script src="{{ asset("public/js/bootstrap/bootstrap.min.js") }}"></script>'."\n".
+									"@endsection";
 
 				$file = fopen($file_sign_view,"w");
 
@@ -339,58 +392,58 @@ class CreateDashboard extends Controller
 			if (!file_exists($header_dashboard_layout))
 			{
 				$content_header = '<header class="main-header">'."\n".
-				'	<a href="#" class="logo">'."\n".
-				'		<span class="logo-mini"><b>APPS</b></span>'."\n".
-				'		<span class="logo-lg">Master<b>APPS</b></span>'."\n".
-				"	</a>\n".
-				'	<nav class="navbar navbar-static-top">'."\n".
-				'		<a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">'."\n".
-				'			<span class="sr-only">Toggle navigation</span>'."\n".
-				"		</a>\n".
-				'		<div class="navbar-custom-menu">'."\n".
-				'			<ul class="nav navbar-nav">'."\n".
-				'				<li class="dropdown user user-menu">'."\n".
-				'					<a href="#" class="dropdown-toggle" data-toggle="dropdown">'."\n".
-				'						@if(auth()->user()->image == "")'."\n".
-				'							<img src="{{ asset("public/images/user/default.jpg") }}" class="user-image" alt="User Image">'."\n".
-				"						@else\n".
-				'							<img src="{{ asset("public/images/user/".auth()->user()->image) }}" class="user-image" alt="User Image">'."\n".
-				"						@endif\n".
-				'						<span class="hidden-xs">'."\n".
-				'							@if(Session::has("adminName"))'."\n".
-				"								{!! auth()->user()->name !!}\n".
-				"							@endif\n".
-				"						</span>\n".
-				"					</a>\n".
-				'					<ul class="dropdown-menu">'."\n".
-				'						<li class="user-header">'."\n".
-				'							@if(auth()->user()->image == "")'."\n".
-				'								<img src="{{ asset("public/images/user/default.jpg") }}" class="img-circle" alt="User Image">'."\n".
-				"							@else\n".
-				'								<img src="{{ asset("public/images/user/".auth()->user()->image) }}" class="img-circle" alt="User Image">'."\n".
-				"							@endif\n".
-				"							<p>\n".
-				'								@if(Session::has("adminName")){!! auth()->user()->name !!}@endif'."\n".
-				'								<small>@if(Session::has("adminLevel")){!! Session::get("adminLevel") !!}@endif MasterAPPS</small>'."\n".
-				"							</p>\n".
-				"						</li>\n".
-				'						<li class="user-footer">'."\n".
-				'							<div class="pull-left">'."\n".
-				'								<a href="{{ url("/profile") }}" class="btn btn-default btn-flat">Profile</a>'."\n".
-				"							</div>\n".
-				'							<div class="pull-right">'."\n".
-				'								<a href="{{ url("/logout") }}" class="btn btn-default btn-flat">Sign Out</a>'."\n".
-				"							</div>\n".
-				"						</li>\n".
-				"					</ul>\n".
-				"				</li>\n".
-				"				<li>\n".
-				'					<a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>'."\n".
-				"				</li>\n".
-				"			</ul>\n".
-				"		</div>\n".
-				"	</nav>\n".
-				'</header>';
+								'<a href="#" class="logo">'."\n".
+								'	<span class="logo-mini"><b>LaraTOR</b></span>'."\n".
+								'	<span class="logo-lg">Lara<b>TOR</b></span>'."\n".
+								'</a>'."\n".
+								'<nav class="navbar navbar-static-top">'."\n".
+								'	<a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">'."\n".
+								'		<span class="sr-only">Toggle navigation</span>'."\n".
+								'	</a>'."\n".
+								'	<div class="navbar-custom-menu">'."\n".
+								'		<ul class="nav navbar-nav">'."\n".
+								'			<li class="dropdown user user-menu">'."\n".
+								'				<a href="#" class="dropdown-toggle" data-toggle="dropdown">'."\n".
+								'					@if(auth()->user()->image == "")'."\n".
+								'						<img src="{{ asset("public/images/user/default.jpg") }}" class="user-image" alt="User Image">'."\n".
+								'					@else'."\n".
+								'						<img src="{{ asset("public/images/user/".auth()->user()->image) }}" class="user-image" alt="User Image">'."\n".
+								'					@endif'."\n".
+								'					<span class="hidden-xs">'."\n".
+								'						@if(Session::has("adminName"))'."\n".
+								'							{!! auth()->user()->name !!}'."\n".
+								'						@endif'."\n".
+								'					</span>'."\n".
+								'				</a>'."\n".
+								'				<ul class="dropdown-menu">'."\n".
+								'					<li class="user-header">'."\n".
+								'						@if(auth()->user()->image == "")'."\n".
+								'							<img src="{{ asset("public/images/user/default.jpg") }}" class="img-circle" alt="User Image">'."\n".
+								'						@else'."\n".
+								'							<img src="{{ asset("public/images/user/".auth()->user()->image) }}" class="img-circle" alt="User Image">'."\n".
+								'						@endif'."\n".
+								'						<p>'."\n".
+								'							@if(Session::has("adminName")){!! auth()->user()->name !!}@endif'."\n".
+								'							<small>@if(Session::has("adminLevel")){!! Session::get("adminLevel") !!}@endif MasterAPPS</small>'."\n".
+								'						</p>'."\n".
+								'					</li>'."\n".
+								'					<li class="user-footer">'."\n".
+								'						<div class="pull-left">'."\n".
+								'							<a href="{{ url("/profile") }}" class="btn btn-default btn-flat">Profile</a>'."\n".
+								'						</div>'."\n".
+								'						<div class="pull-right">'."\n".
+								'							<a href="{{ url("/logout") }}" class="btn btn-default btn-flat">Sign Out</a>'."\n".
+								'						</div>'."\n".
+								'					</li>'."\n".
+								'				</ul>'."\n".
+								'			</li>'."\n".
+								'			<li>'."\n".
+								'				<a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>'."\n".
+								'			</li>'."\n".
+								'		</ul>'."\n".
+								'	</div>'."\n".
+								'</nav>'."\n".
+							'</header>';
 
 				$file = fopen($header_dashboard_layout,"w");
 
@@ -401,56 +454,68 @@ class CreateDashboard extends Controller
 
 			if (!file_exists($content_dashboard_layout))
 			{
-				$content_content = "<!DOCTYPE html>\n".
-				'<html lang="'.'{{ str_replace("_", "-", app()->getLocale()) }}"'.'>'."\n".
-				'	<head>'."\n".
-				'		<title>MasterAPPS | @yield("title")</title>'."\n".
-				'		<meta charset="UTF-8" />'."\n".
-				'		<meta name="csrf-token" content="{{ csrf_token() }}">'."\n".
-				'		<meta name="viewport" content="width=device-width, initial-scale=1.0" />'."\n".
-				'		<link rel="icon" type="image/png" href="{{ asset("public/images/icon/book.png") }}" />'."\n".
-				'		<link rel="stylesheet" href="{{ asset("public/css/bootstrap/bootstrap.min.css") }}">'."\n".
-				'		<link rel="stylesheet" href="{{ asset("public/css/font-awesome/css/font-awesome.min.css") }}">'."\n".
-				'		<link rel="stylesheet" href="{{ asset("public/css/Ionicons/css/ionicons.min.css") }}">'."\n".
-				'		<link rel="stylesheet" href="{{ asset("public/css/datatables.net-bs/css/dataTables.bootstrap.min.css") }}">'."\n".
-				'		<link rel="stylesheet" href="{{ asset("public/css/morris/morris.css") }}">'."\n".
-				'		<link rel="stylesheet" href="{{ asset("public/css/adminLTE/AdminLTE.min.css") }}">'."\n".
-				'		<link rel="stylesheet" href="{{ asset("public/css/skins/_all-skins.min.css") }}">'."\n".
-				'		<link rel="stylesheet" href="{{ asset("public/css/bootstrap/bootstrap-datepicker.min.css") }}">'."\n".
-				'		<link rel="stylesheet" href="{{ asset("public/css/style/style.css") }}">'."\n".
-				'		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">'."\n".
-				'	</head>'."\n".
-				'	<body class="hold-transition skin-blue sidebar-mini fixed">'."\n".
-				'		<div class="wrapper">'."\n".
-				'			@include("layouts.dashboard.header")'."\n".
-				'			@include("layouts.dashboard.sidebar")'."\n".
-				'			<div class="content-wrapper">'."\n".
-				'				@yield("content")'."\n".
-				'			</div>'."\n".
-				'			@include("layouts.dashboard.footer")'."\n".
-				'		</div>'."\n".
-				'		<script src="{{ asset("public/js/jQuery/jquery.min.js") }}"></script>'."\n".
-				'		<script src="{{ asset("public/js/jQuery/jquery-ui.min.js") }}"></script>'."\n".
-				'		<script>'."\n".
-				'			$.widget.bridge("uibutton", $'.'.ui.button);'."\n".
-				'		</script>'."\n".
-				'		<script src="{{ asset("public/js/bootstrap/bootstrap.min.js") }}"></script>'."\n".
-				'		<script src="{{ asset("public/js/jQuery/jquery.dataTables.min.js") }}"></script>'."\n".
-				'		<script src="{{ asset("public/js/bootstrap/dataTables.bootstrap.min.js") }}"></script>'."\n".
-				'		<script src="{{ asset("public/js/moment/moment.min.js") }}"></script>'."\n".
-				'		<script src="{{ asset("public/js/bootstrap/daterangepicker.js") }}"></script>'."\n".
-				'		<script src="{{ asset("public/js/bootstrap/bootstrap-datepicker.min.js") }}"></script>'."\n".
-				'		<script src="{{ asset("public/js/jQuery/jquery.slimscroll.min.js") }}"></script>'."\n".
-				'		<script src="{{ asset("public/js/fastclick/fastclick.js") }}"></script>'."\n".
-				'		<script src="{{ asset("public/js/adminLTE/adminlte.min.js") }}"></script>'."\n".
-				'		<script src="{{ asset("public/js/adminLTE/dashboard.js") }}"></script>'."\n".
-				'		<script src="{{ asset("public/js/adminLTE/demo.js") }}"></script>'."\n".
-				'		<script src="{{ asset("public/js/chart/Chart.js") }}"></script>'."\n".
-				'		<script src="{{ asset("public/js/morris/morris.min.js") }}"></script>'."\n".
-				'		<script src="{{ asset("public/js/raphael/raphael.min.js") }}"></script>'."\n".
-				'		<script src="{{ asset("public/js/dobpicker.js") }}"></script>'."\n".
-				'	</body>'."\n".
-				'</html>';
+				$content_content = '<!DOCTYPE html>'."\n".
+								'<html lang="{{ str_replace("_", "-", app()->getLocale()) }}">'."\n".
+								'	<head>'."\n".
+								'		<title>LaraTOR | @yield("title")</title>'."\n".
+								'		<meta charset="UTF-8" />'."\n".
+								'		<meta name="csrf-token" content="{{ csrf_token() }}">'."\n".
+								'		<meta name="viewport" content="width=device-width, initial-scale=1.0" />'."\n".
+								'		<link rel="icon" type="image/png" href="{{ asset("public/images/icon/book.png") }}" />'."\n".
+								'		<link rel="stylesheet" href="{{ asset("public/css/bootstrap/bootstrap.min.css") }}">'."\n".
+								'		<link rel="stylesheet" href="{{ asset("public/css/font-awesome/css/font-awesome.min.css") }}">'."\n".
+								'		<link rel="stylesheet" href="{{ asset("public/css/Ionicons/css/ionicons.min.css") }}">'."\n".
+								'		<link rel="stylesheet" href="{{ asset("public/css/datatables.net-bs/css/dataTables.bootstrap.min.css") }}">'."\n".
+								'		<link rel="stylesheet" href="{{ asset("public/css/morris/morris.css") }}">'."\n".
+								'		<link rel="stylesheet" href="{{ asset("public/css/adminLTE/AdminLTE.min.css") }}">'."\n".
+								'		<link rel="stylesheet" href="{{ asset("public/css/skins/_all-skins.min.css") }}">'."\n".
+								'		<link rel="stylesheet" href="{{ asset("public/css/bootstrap/bootstrap-datepicker.min.css") }}">'."\n".
+								'		<link rel="stylesheet" href="{{ asset("public/css/style/style.css") }}">'."\n".
+								'		<link rel="stylesheet" href="{{ asset("public/css/masterapps.css") }}">'."\n".
+								'		<link rel="stylesheet" href="{{ asset("node_modules/sweetalert2/dist/sweetalert2.min.css") }}">'."\n".
+								'		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">'."\n".
+								'		@yield("extra_style")'."\n".
+								'	</head>'."\n".
+								'	<body class="hold-transition skin-blue sidebar-mini fixed">'."\n".
+								'		<div id="cover-spin"></div>'."\n".
+								'		<div class="wrapper">'."\n".
+								'			@include("layouts.dashboard.header")'."\n".
+								'			@include("layouts.dashboard.sidebar")'."\n".
+								'			<div class="content-wrapper">'."\n".
+								'				@yield("content")'."\n".
+								'			</div>'."\n".
+								'			@include("layouts.dashboard.footer")'."\n".
+								'		</div>'."\n".
+								'		<script src="{{asset("public/js/axios/axios.min.js")}}"></script>'."\n".
+								'		<script src="{{asset("public/js/vue/vue.js")}}"></script>'."\n".
+								'		<script src="{{ asset("public/js/jQuery/jquery.min.js") }}"></script>'."\n".
+								'		<script src="{{ asset("public/js/jQuery/jquery-ui.min.js") }}"></script>'."\n".
+								'		<script>'."\n".
+								'			$.widget.bridge("uibutton", $.ui.button);'."\n".
+								'		</script>'."\n".
+								'		<script src="{{ asset("public/js/bootstrap/bootstrap.min.js") }}"></script>'."\n".
+								'		<script src="{{ asset("public/js/jQuery/jquery.dataTables.min.js") }}"></script>'."\n".
+								'		<script src="{{ asset("public/js/bootstrap/dataTables.bootstrap.min.js") }}"></script>'."\n".
+								'		<script src="{{ asset("public/js/moment/moment.min.js") }}"></script>'."\n".
+								'		<script src="{{ asset("public/js/bootstrap/daterangepicker.js") }}"></script>'."\n".
+								'		<script src="{{ asset("public/js/bootstrap/bootstrap-datepicker.min.js") }}"></script>'."\n".
+								'		<script src="{{ asset("public/js/jQuery/jquery.slimscroll.min.js") }}"></script>'."\n".
+								'		<script src="{{ asset("public/js/fastclick/fastclick.js") }}"></script>'."\n".
+								'		<script src="{{ asset("public/js/adminLTE/adminlte.min.js") }}"></script>'."\n".
+								'		<script src="{{ asset("public/js/adminLTE/dashboard.js") }}"></script>'."\n".
+								'		<script src="{{ asset("public/js/adminLTE/demo.js") }}"></script>'."\n".
+								'		<script src="{{ asset("public/js/chart/Chart.js") }}"></script>'."\n".
+								'		<script src="{{ asset("public/js/morris/morris.min.js") }}"></script>'."\n".
+								'		<script src="{{ asset("public/js/raphael/raphael.min.js") }}"></script>'."\n".
+								'		<script src="{{ asset("public/js/dobpicker.js") }}"></script>'."\n".
+								'		<script src="{{ asset("public/js/sweetalert2/dist/sweetalert2.min.js") }}"></script>'."\n".
+								'		<script src="{{ asset("public/js/master.js") }}"></script>'."\n".
+								'		<script type="text/javascript">'."\n".
+								'			var baseURL = "{{ url("/"") }}";'."\n".
+								'		</script>'."\n".
+								'		@yield("extra_script")'."\n".
+								'	</body>'."\n".
+								'</html>';
 
 				$file = fopen($content_dashboard_layout,"w");
 
@@ -626,35 +691,52 @@ class CreateDashboard extends Controller
 				'		<div class="user-panel">'."\n".
 				'			<div class="pull-left image">'."\n".
 				'				@if(auth()->user()->image == "")'."\n".
-				'					<img src="{{ asset("public/images/user/default.jpg") }}" class="img-circle" alt="User Image">'."\n".
-				"				@else\n".
-				'					<img src="{{ asset("public/images/user/". auth()->user()->image) }}" class="img-circle" alt="User Image">'."\n".
-				"				@endif\n".
-				"			</div>\n".
+				'					<img src="{{ asset("public/images/user/default.jpg") }}" id="photo_sidebar" class="img-circle" alt="User Image">'."\n".
+				'				@else'."\n".
+				'					<img src="{{ asset("public/images/user/". auth()->user()->image) }}" id="photo_sidebar" class="img-circle" alt="User Image">'."\n".
+				'				@endif'."\n".
+				'			</div>'."\n".
 				'			<div class="pull-left info">'."\n".
-				"				<p>\n".
+				'				<p>'."\n".
 				'					@if(Session::has("adminName"))'."\n".
-				"						{!! auth()->user()->name !!}\n".
-				"					@endif\n".
-				"				</p>\n".
+				'						{!! auth()->user()->name !!}'."\n".
+				'					@endif'."\n".
+				'				</p>'."\n".
 				'				<a href="#"><i class="fa fa-circle text-success"></i> Online</a>'."\n".
-				"			</div>\n".
-				"		</div>\n".
+				'			</div>'."\n".
+				'		</div>'."\n".
 				'		<ul class="sidebar-menu" data-widget="tree">'."\n".
 				'			<li class="header">MAIN NAVIGATION</li>'."\n".
-				'			<li <?php if(preg_match("/dashboard/i", $url)) { ?> class="active" <?php } ?>>'."\n".
+				'			<li <?php if(preg_match("/dashboard/i", $'.'url)) { ?> class="active" <?php } ?>>'."\n".
 				'				<a href="{{ url("/dashboard") }}">'."\n".
 				'					<i class="fa fa-dashboard"></i> <span>Dashboard</span>'."\n".
-				"				</a>\n".
-				"			</li>\n".
-				'			<li <?php if(preg_match("/log-activity/i", $url)) { ?> class="active" <?php } ?>>'."\n".
+				'				</a>'."\n".
+				'			</li>'."\n".
+				'			<li class="header">Users</li>'."\n".
+				'			<li <?php if(preg_match("/profile/i", $'.'url)) { ?> class="active" <?php } ?>>'."\n".
+				'				<a href="{{ url("/profile") }}">'."\n".
+				'					<i class="fa fa-user"></i> <span>Profile</span>'."\n".
+				'				</a>'."\n".
+				'			</li>'."\n".
+				'			<li <?php if(preg_match("/management-user/i", $'.'url)) { ?> class="active" <?php } ?>>'."\n".
+				'				<a href="{{ url("/management-user") }}">'."\n".
+				'					<i class="fa fa-users"></i> <span>Management Users</span>'."\n".
+				'				</a>'."\n".
+				'			</li>'."\n".
+				'			<li <?php if(preg_match("/log-activity/i", $'.'url)) { ?> class="active" <?php } ?>>'."\n".
 				'				<a href="{{ url("/log-activity") }}">'."\n".
 				'					<i class="fa fa-clock-o"></i> <span>Log Activity</span>'."\n".
-				"				</a>\n".
-				"			</li>\n".
-				"		</ul>\n".
-				"	</section>\n".
-				"</aside>";
+				'				</a>'."\n".
+				'			</li>'."\n".
+				'			<li class="header">Menu</li>'."\n".
+				'			<li <?php if(preg_match("/menu/i", $'.'url)) { ?> class="active" <?php } ?>>'."\n".
+				'				<a href="{{ url("/menu") }}">'."\n".
+				'					<i class="fa fa-book"></i> <span>Management Menu</span>'."\n".
+				'				</a>'."\n".
+				'			</li>'."\n".
+				'		</ul>'."\n".
+				'	</section>'."\n".
+				'</aside>';
 
 				$file = fopen($sidebar_dashboard_layout,"w");
 
@@ -676,30 +758,29 @@ class CreateDashboard extends Controller
 			if (!file_exists($file_admin_dashboard))
 			{
 				$content_dashboard = '@extends("layouts.dashboard.content")'."\n".
-				'@section("title", "Dashboard")'."\n".
-				'@section("content")'."\n".
-				'<section class="content-header">'."\n".
-				"	<h1>\n".
-				"		Dashboard\n".
-				"		<small>Control panel</small>\n".
-				"	</h1>\n".
-				'	<ol class="breadcrumb">'."\n".
-				'		<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>'."\n".
-				'		<li class="active">Dashboard</li>'."\n".
-				"	</ol>\n".
-				"</section>\n".
-				'<section class="content">'."\n".
-				'	<div class="row">'."\n".
-				'		<div class="col-lg-12">'."\n".
-				'			<div class="alert alert-success alert-block">'."\n".
-				'				<button type="button" class="close" data-dismiss="alert">&times;</button>'."\n".
-				'				<strong>Welcome to the dashboard MasterAPPS</strong>'."\n".
-				'			</div>'."\n".
-				"		</div>\n".
-				"	</div>\n".
-				"</section>\n".
-				"@endsection\n".
-				'<script src="{{ asset("public/js/jQuery/jquery.min.js") }}"></script>';
+									'@section("title", "Dashboard")'."\n".
+									'@section("content")'."\n".
+									'<section class="content-header">'."\n".
+									'	<h1>'."\n".
+									'		Dashboard'."\n".
+									'		<small>Control panel</small>'."\n".
+									'	</h1>'."\n".
+									'	<ol class="breadcrumb">'."\n".
+									'		<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>'."\n".
+									'		<li class="active">Dashboard</li>'."\n".
+									'	</ol>'."\n".
+									'</section>'."\n".
+									'<section class="content">'."\n".
+									'	<div class="row">'."\n".
+									'		<div class="col-lg-12">'."\n".
+									'			<div class="alert alert-success alert-block">'."\n".
+									'				<button type="button" class="close" data-dismiss="alert">&times;</button>'."\n".
+									'				<strong>Welcome to the dashboard LaraTOR</strong>'."\n".
+									'			</div>'."\n".
+									'		</div>'."\n".
+									'	</div>'."\n".
+									'</section>'."\n".
+									'@endsection';
 
 				$file = fopen($file_admin_dashboard,"w");
 
@@ -718,7 +799,13 @@ class CreateDashboard extends Controller
     	$routes = "routes/web.php";
     	try{
     		$handle = fopen($routes, 'a') or die('Cannot open file:  '.$routes);
-			$new_route = "\n".'Route::group(["namespace" => "Sign"], function(){'."\n".
+			$new_route = "<?php \n".
+						 'if (Route::has("/") === false) {'."\n".
+						 '	Route::get('/', function () {'."\n".
+						 '		return view("welcome");'."\n".
+						 '	});'."\n".
+						 '}'."\n".
+						 'Route::group(["namespace" => "Sign"], function(){'."\n".
 						 '	Route::get("/", "SignController@login");'."\n".
 						 '	Route::match(["get", "post"], "/login", "SignController@login")->name("login");'."\n".
 						 '	Route::get("/logout", "SignController@logout");'."\n".
@@ -728,15 +815,51 @@ class CreateDashboard extends Controller
 						 '	Route::group(["namespace" => "Dashboard"], function(){'."\n".
 						 '		//route dashboard'."\n".
 						 '		Route::get("/dashboard", "DashboardController@dashboard");'."\n".
+						 '	});'."\n".
+						 '	Route::group(["namespace" => "Users"], function(){'."\n".
 						 '		//route profile'."\n".
-						 '		Route::get("/profile", "DashboardController@profile");'."\n".
-						 "	});\n".
+						 '		Route::get("/profile", "ProfileController@index");'."\n".
+						 '		//update photo profile'."\n".
+						 '		Route::post("/profile/update-photo-profile", "ProfileController@updatePhotoProfile");'."\n".
+						 '		//delete photo profile'."\n".
+						 '		Route::get("/profile/delete-photo-profile", "ProfileController@deletePhotoProfile");'."\n".
+						 '		//update user details'."\n".
+						 '		Route::post("/profile/update-user-details", "ProfileController@updateProfile");'."\n".
+						 '		//update password'."\n".
+						 '		Route::post("/profile/update-password", "ProfileController@updatePassword");'."\n".
+						 '		//management user'."\n".
+						 '		Route::get("/management-user", "ManagementController@index");'."\n".
+						 '		//get management user'."\n".
+						 '		Route::get("/management-user/get-user", "ManagementController@getUser");'."\n".
+						 '		//get level'."\n".
+						 '		Route::get("/management-user/get-level", "ManagementController@getLevel");'."\n".
+						 '		Route::get("/management-user/get-data-level", "ManagementController@getDataLevel");'."\n".
+						 '		//delete level'."\n".
+						 '		Route::get("/management-user/delete-level/{id}", "ManagementController@deleteLevel");'."\n".
+						 '		//add level'."\n".
+						 '		Route::post("/management-user/add-level", "ManagementController@addLevel");'."\n".
+						 '		//add user'."\n".
+						 '		Route::post("/management-user/add-user", "ManagementController@addUser");'."\n".
+						 '		//detail user'."\n".
+						 '		Route::get("/management-user/detail-user/{id}", "ManagementController@detailUser");'."\n".
+						 '		//change password user'."\n".
+						 '		Route::get("/management-user/change-password/{id}", "ManagementController@changePassword");'."\n".
+						 '		//edit user'."\n".
+						 '		Route::match(["get", "post"], "/management-user/edit-user/{id}", "ManagementController@editUser");'."\n".
+						 '		//delete photo profile'."\n".
+						 '		Route::get("/management-user/delete-photo-profile/{id}", "ManagementController@deletePhotoProfile");'."\n".
+						 '		//delete user'."\n".
+						 '		Route::get("/management-user/delete-user/{id}", "ManagementController@deleteUser");'."\n".
+						 '		//log activity'."\n".
+						 '		Route::get("/log-activity", "ActivityController@index");'."\n".
+						 '		//get log activity user'."\n".
+						 '		Route::get("/log-activity/get", "ActivityController@getLog");'."\n".
+						 '	});'."\n".
 						 "});";
 			fwrite($handle, $new_route);
 			return true;
     	}catch (Exception $e){
     		return $e;
     	}
-		
     }
 }
