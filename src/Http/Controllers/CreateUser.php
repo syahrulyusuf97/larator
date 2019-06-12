@@ -25,7 +25,7 @@ class CreateUser extends Controller
             }
 
             if (self::checkUsername('admin') == 0) {
-                DB::table('user')->insert([
+                $admin = DB::table('user')->insertGetId([
                     'name'          => 'Your Name',
                     'email'         => 'your@email.com',
                     'username'      => 'admin',
@@ -36,6 +36,24 @@ class CreateUser extends Controller
                     'created_at'    => Carbon::now()->format('Y-m-d H:i:s'),
                     'updated_at'    => Carbon::now()->format('Y-m-d H:i:s')
                 ]);
+
+                $access = DB::table('access')->select('id')->where('name', '!=', 'Management Menu')->get();
+
+                $arr_access = [];
+                foreach ($access as $key => $value) {
+                    $data = [
+                        'iduser' => $admin,
+                        'access' => $value->id,
+                        'read'   => "Y",
+                        'insert' => "Y",
+                        'update' => "Y",
+                        'delete' => "Y",
+                        'created_at'    => Carbon::now()->format('Y-m-d H:i:s'),
+                        'updated_at'    => Carbon::now()->format('Y-m-d H:i:s')
+                    ];
+                    array_push($arr_access, $data);                    
+                }
+                DB::table('user_access')->insert($arr_access);
             } else if (self::checkUsername('admin') == 1) {
                 DB::table('user')->where('id', '=', self::getUser('admin'))->update([
                     'name'          => 'Your Name',
@@ -75,7 +93,7 @@ class CreateUser extends Controller
             }
             
             if (self::checkUsername('developer') == 0) {
-                DB::table('user')->insert([
+                $dev = DB::table('user')->insertGetId([
                     'name'          => 'Developer',
                     'email'         => 'developer@email.com',
                     'username'      => 'developer',
@@ -86,6 +104,24 @@ class CreateUser extends Controller
                     'created_at'    => Carbon::now()->format('Y-m-d H:i:s'),
                     'updated_at'    => Carbon::now()->format('Y-m-d H:i:s')
                 ]);
+
+                $access = DB::table('access')->select('id')->get();
+
+                $arr_access = [];
+                foreach ($access as $key => $value) {
+                    $data = [
+                        'iduser' => $dev,
+                        'access' => $value->id,
+                        'read'   => "Y",
+                        'insert' => "Y",
+                        'update' => "Y",
+                        'delete' => "Y",
+                        'created_at'    => Carbon::now()->format('Y-m-d H:i:s'),
+                        'updated_at'    => Carbon::now()->format('Y-m-d H:i:s')
+                    ];
+                    array_push($arr_access, $data);                    
+                }
+                DB::table('user_access')->insert($arr_access);
             } else if (self::checkUsername('developer') == 1) {
                 DB::table('user')->where('id', '=', self::getUser('developer'))->update([
                     'name'          => 'Developer',
