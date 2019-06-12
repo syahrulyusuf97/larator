@@ -1,4 +1,5 @@
 <?php
+
 namespace Syahrulyusuf97\Larator\Http\Controllers;
 
 use App\Http\Controllers\Controller;

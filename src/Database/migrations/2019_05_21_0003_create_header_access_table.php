@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAccessTable extends Migration
+class CreateHeaderAccessTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,10 @@ class CreateAccessTable extends Migration
      */
     public function up()
     {
-        Schema::create('access', function (Blueprint $table) {
+        Schema::create('header_access', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name', 50);
-            $table->string('link');
-            $table->string('icon', 25);
-            $table->integer('parent');
             $table->integer('order');
-            $table->enum('active', ['N', 'Y'])->default('N');
         });
     }
 
@@ -31,6 +27,6 @@ class CreateAccessTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('access');
+        Schema::dropIfExists('header_access');
     }
 }

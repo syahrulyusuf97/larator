@@ -1,4 +1,5 @@
 <?php
+
 namespace Syahrulyusuf97\Larator\Http\Controllers;
 
 use App\Http\Controllers\Controller;
@@ -19,19 +20,17 @@ class CreateDashboard extends Controller
 			$makeDashboard 	 = self::makeDashboard($dir_controllers, $dir_views);
 			$makeRoutes 	 = self::makeRoutes();
 
-			if ($makeSign === true && $makeDashboard === true && $makeRoutes === true) {
+			if ($makeSign === "true" && $makeDashboard === "true" && $makeRoutes === "true") {
 				$results = "The dashboard was successfully created";
-			} else {
-				if ($makeSign != true) {
-					$results = "Failed to create a dashboard\n".
-						   "Error to make sign => ".$makeSign;
-				} else if ($makeDashboard != true) {
-					$results = "Failed to create a dashboard\n".
-						   "Error to make dashboard => ".$makeDashboard;
-				} else if ($makeRoutes != true) {
-					$results = "Failed to create a dashboard\n".
-						   "Error to make routes => ".$makeRoutes;
-				}
+			} else if ($makeSign != "true") {
+				$results = "Failed to create a dashboard\n".
+					   "Error to make sign => ".$makeSign;
+			} else if ($makeDashboard != "true") {
+				$results = "Failed to create a dashboard\n".
+					   "Error to make dashboard => ".$makeDashboard;
+			} else if ($makeRoutes != "true") {
+				$results = "Failed to create a dashboard\n".
+					   "Error to make routes => ".$makeRoutes;
 			}
 		}catch (Exception $e){
 			$results =  "Failed to create a dashboard\n".
@@ -79,29 +78,24 @@ class CreateDashboard extends Controller
 
 				fclose($file);
 			} else {
-				try{
-		    		$handle = fopen($user_model, 'a') or die('Cannot open file:  '.$user_model);
-					$new_user_model = "<?php \n".
-										"namespace App;\n".
-										"use Illuminate\Notifications\Notifiable;\n".
-										"use Illuminate\Contracts\Auth\MustVerifyEmail;\n".
-										"use Illuminate\Foundation\Auth\User as Authenticatable;\n".
-										"class User extends Authenticatable\n".
-										"{\n".
-										"	use Notifiable;\n".
-										"	protected $"."table       = 'user';\n".
-										"	protected $fillable = [\n".
-									    "    	'name', 'email', 'username', 'password',\n".
-									    "	];\n".
-									    "	protected $hidden = [\n".
-									    "	    'password',\n".
-									    "	];\n".
-										"}";
-					fwrite($handle, $new_user_model);
-					return true;
-		    	}catch (Exception $e){
-		    		return $e;
-		    	}
+				$handle = fopen($user_model, 'a') or die('Cannot open file:  '.$user_model);
+				$new_user_model = "<?php \n".
+									"namespace App;\n".
+									"use Illuminate\Notifications\Notifiable;\n".
+									"use Illuminate\Contracts\Auth\MustVerifyEmail;\n".
+									"use Illuminate\Foundation\Auth\User as Authenticatable;\n".
+									"class User extends Authenticatable\n".
+									"{\n".
+									"	use Notifiable;\n".
+									"	protected $"."table       = 'user';\n".
+									"	protected $fillable = [\n".
+								    "    	'name', 'email', 'username', 'password',\n".
+								    "	];\n".
+								    "	protected $hidden = [\n".
+								    "	    'password',\n".
+								    "	];\n".
+									"}";
+				fwrite($handle, $new_user_model);
 			}
 
 			if (!file_exists($activity_model)) {
@@ -322,7 +316,7 @@ class CreateDashboard extends Controller
 
 				fclose($file);
 			}
-			return true;
+			return "true";
 		}catch (Exception $e){
 			return $e;
 		}
@@ -791,7 +785,7 @@ class CreateDashboard extends Controller
 
 				fclose($file);
 			}
-    		return true;
+    		return "true";
     	}catch (Exception $e){
     		return $e;
     	}
@@ -860,7 +854,7 @@ class CreateDashboard extends Controller
 						 '	});'."\n".
 						 "});";
 			fwrite($handle, $new_route);
-			return true;
+			return "true";
     	}catch (Exception $e){
     		return $e;
     	}
