@@ -1,4 +1,4 @@
-# larator
+# LaraTOR (Laravel Generator)
 
 ## Getting Started
 
